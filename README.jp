@@ -1,0 +1,28 @@
+============== -*- outline -*- ==============
+
+                    bmap
+2009/09  morimoto
+=============================================
+
+* これは？
+
+	bmap は bitmap をフレームバッファに吐き出すコマンド
+
+* ライセンスは？
+
+	GPL v2 です
+
+* How to use ?
+
+	デフォルトでは /devfb0 に出力される
+	bmap bitmap.bmp
+
+	x = 100, y = 120 の位置に表示したい場合
+	bmap -x 100 -y 120 bitmap.bmp
+
+	/dev/fb3 に出したい場合
+	bmap /dev/fb3 bitmap.bmp
+
+* static リンクにするには？
+
+	EXTR=-static make
