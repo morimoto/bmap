@@ -14,7 +14,7 @@
 
 * How to use ?
 
-	デフォルトでは /devfb0 に出力される
+	デフォルトでは /dev/fb0 に出力される
 	bmap bitmap.bmp
 
 	x = 100, y = 120 の位置に表示したい場合
