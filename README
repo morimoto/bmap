@@ -1,0 +1,28 @@
+============== -*- outline -*- ==============
+
+                    bmap
+2009/09  morimoto
+=============================================
+
+* What is this ?
+
+	bmap is a command to spew a bitmap onto the framebuffer.
+
+* What is the license ?
+
+	GPL v2
+
+* How to use ?
+
+	The default behavior is to output to /dev/fb0:
+	bmap bitmap.bmp
+
+	To display at the position x = 100, y = 120:
+	bmap -x 100 -y 120 bitmap.bmp
+
+	To display on /dev/fb3:
+	bmap /dev/fb3 bitmap.bmp
+
+* How to statically link ?
+
+	EXTR=-static make
