@@ -45,18 +45,18 @@ static void drawcolor24( struct BitMap *pBit )
 {
     u8* rgb = pBit->getcolor( pBit );
 
-    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[2];
-    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[1];
     *((u8*)(g_FB.map + g_FB.seek++)) = rgb[0];
+    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[1];
+    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[2];
 }
 
 static void drawcolor32( struct BitMap *pBit )
 {
     u8* rgb = pBit->getcolor( pBit );
 
-    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[2];
-    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[1];
     *((u8*)(g_FB.map + g_FB.seek++)) = rgb[0];
+    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[1];
+    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[2];
     g_FB.seek++;
 }
 
