@@ -39,6 +39,7 @@ static u32 get_bitmapsize( const char *pFile )
         goto size_err;
 
     switch ( head.bit_count ) {
+    case 16:
     case 24:
     case 32:
         break;
@@ -58,22 +59,40 @@ size_err:
 //          getcolor
 //
 //=====================================
-static u8* getcolor24( struct BitMap *pBit )
+static void getcolor16( struct BitMap *pBit ,
+                        u8 *pRed , u8 *pGreen , u8 *pBlue )
 {
-    u8 *ret = (u8*)(pBit->map + pBit->seek);
+    u16 rgb = *((u16*)(pBit->map + pBit->seek));
+
+    pBit->seek += 2;
+
+    *pRed   = (u8)((rgb & 0xF800) >> 8);
+    *pGreen = (u8)((rgb & 0x07E0) >> 3);
+    *pBlue  = (u8)((rgb & 0x001F) << 3);
+}
+
+static void getcolor24( struct BitMap *pBit ,
+                        u8 *pRed , u8 *pGreen , u8 *pBlue )
+{
+    u8 *rgb = (u8*)(pBit->map + pBit->seek);
 
     pBit->seek += 3;
 
-    return ret;
+    *pRed   = rgb[2];
+    *pGreen = rgb[1];
+    *pBlue  = rgb[0];
 }
 
-static u8* getcolor32( struct BitMap *pBit )
+static void getcolor32( struct BitMap *pBit ,
+                        u8 *pRed , u8 *pGreen , u8 *pBlue )
 {
-    u8 *ret = (u8*)(pBit->map + pBit->seek);
+    u8 *rgb = (u8*)(pBit->map + pBit->seek);
 
     pBit->seek += 4;
 
-    return ret;
+    *pRed   = rgb[2];
+    *pGreen = rgb[1];
+    *pBlue  = rgb[0];
 }
 
 //======================================================================
@@ -173,6 +192,7 @@ struct BitMap* OpenBitMap( const char *pFile )
     pret->phead = (struct BitMapHeader *)(pret->map + sizeof(struct BitMapInfo));
 
     switch ( pret->phead->bit_count ) {
+    case 16 : pret->getcolor = getcolor16; break;
     case 24 : pret->getcolor = getcolor24; break;
     case 32 : pret->getcolor = getcolor32; break;
     default:

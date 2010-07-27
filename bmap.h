@@ -66,7 +66,7 @@ struct BitMap {
     size_t size;
     struct BitMapInfo   *pinfo;
     struct BitMapHeader *phead;
-    u8* (*getcolor)( struct BitMap *pBit );
+    void (*getcolor)( struct BitMap *pBit , u8 *pRed , u8 *pGreen , u8 *pBlue );
     u32 map;
     u32 seek;
 };

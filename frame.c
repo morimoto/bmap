@@ -34,29 +34,35 @@ struct FramBuffer g_FB;
 
 static void drawcolor16( struct BitMap *pBit )
 {
-    u8* rgb = pBit->getcolor( pBit );
+    u8 r, g, b;
 
-    *((u16*)(g_FB.map + g_FB.seek)) = RGB16( rgb[2], rgb[1], rgb[0] );
+    pBit->getcolor( pBit , &r , &g , &b );
+
+    *((u16*)(g_FB.map + g_FB.seek)) = RGB16( r , g , b );
 
     g_FB.seek += 2;
 }
 
 static void drawcolor24( struct BitMap *pBit )
 {
-    u8* rgb = pBit->getcolor( pBit );
+    u8 r, g, b;
 
-    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[0];
-    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[1];
-    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[2];
+    pBit->getcolor( pBit , &r , &g , &b );
+
+    *((u8*)(g_FB.map + g_FB.seek++)) = r;
+    *((u8*)(g_FB.map + g_FB.seek++)) = g;
+    *((u8*)(g_FB.map + g_FB.seek++)) = b;
 }
 
 static void drawcolor32( struct BitMap *pBit )
 {
-    u8* rgb = pBit->getcolor( pBit );
+    u8 r, g, b;
 
-    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[0];
-    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[1];
-    *((u8*)(g_FB.map + g_FB.seek++)) = rgb[2];
+    pBit->getcolor( pBit , &r , &g , &b );
+
+    *((u8*)(g_FB.map + g_FB.seek++)) = r;
+    *((u8*)(g_FB.map + g_FB.seek++)) = g;
+    *((u8*)(g_FB.map + g_FB.seek++)) = b;
     g_FB.seek++;
 }
 
