@@ -12,6 +12,11 @@
 
 	GPL v2 です
 
+* How to コンパイル
+
+	sample.config を .config ってファイルにリネームして
+	書き換えれば？
+
 * How to use ?
 
 	デフォルトでは /dev/fb0 に出力される

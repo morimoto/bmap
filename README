@@ -12,6 +12,11 @@
 
 	GPL v2
 
+* How to compile ?
+
+	copy sample.config to .config file.
+	and modify it for your environment.
+
 * How to use ?
 
 	The default behavior is to output to /dev/fb0:
