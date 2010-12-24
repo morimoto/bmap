@@ -90,9 +90,9 @@ static void getcolor32( struct BitMap *pBit ,
 
     pBit->seek += 4;
 
-    *pRed   = rgb[2];
-    *pGreen = rgb[1];
-    *pBlue  = rgb[0];
+    *pRed   = rgb[3];
+    *pGreen = rgb[2];
+    *pBlue  = rgb[1];
 }
 
 //======================================================================

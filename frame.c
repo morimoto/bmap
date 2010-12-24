@@ -31,6 +31,7 @@ struct FramBuffer g_FB;
 //
 //=====================================
 #define RGB16(r, g, b) ((u16)((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | (((b) & 0xF8) >> 3)))
+#define RGB32(r, g, b) (u32)(((r) << 16) | ((g) << 8) | ((b) << 0))
 
 static void drawcolor16( struct BitMap *pBit )
 {
@@ -49,9 +50,9 @@ static void drawcolor24( struct BitMap *pBit )
 
     pBit->getcolor( pBit , &r , &g , &b );
 
-    *((u8*)(g_FB.map + g_FB.seek++)) = r;
-    *((u8*)(g_FB.map + g_FB.seek++)) = g;
     *((u8*)(g_FB.map + g_FB.seek++)) = b;
+    *((u8*)(g_FB.map + g_FB.seek++)) = g;
+    *((u8*)(g_FB.map + g_FB.seek++)) = r;
 }
 
 static void drawcolor32( struct BitMap *pBit )
@@ -60,10 +61,8 @@ static void drawcolor32( struct BitMap *pBit )
 
     pBit->getcolor( pBit , &r , &g , &b );
 
-    *((u8*)(g_FB.map + g_FB.seek++)) = r;
-    *((u8*)(g_FB.map + g_FB.seek++)) = g;
-    *((u8*)(g_FB.map + g_FB.seek++)) = b;
-    g_FB.seek++;
+    *((u32*)(g_FB.map + g_FB.seek)) = RGB32( r , g , b );
+    g_FB.seek += 4;
 }
 
 //=====================================
