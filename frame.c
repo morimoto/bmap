@@ -17,7 +17,7 @@ Copyright (c) Kuninori Morimoto <morimoto.kuninori@renesas.com>
 struct FramBuffer {
     int id;
     size_t size;
-    u32 map;
+    uintptr_t map;
     u32 seek;
     struct fb_var_screeninfo info;
     void (*drawcolor)( struct BitMap *pBit );
@@ -191,7 +191,7 @@ bool OpenFrameBuffer( const char *pFrame )
                 g_FB.info.yres_virtual *
                 g_FB.info.bits_per_pixel / 8;
 
-    g_FB.map = (u32)mmap( NULL, g_FB.size,
+    g_FB.map = (uintptr_t)mmap( NULL, g_FB.size,
                           PROT_READ | PROT_WRITE, MAP_SHARED,
                           g_FB.id, 0 );
 

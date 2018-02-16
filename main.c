@@ -44,8 +44,8 @@ int main( int argc, char *argv[] )
     //----------------------
     while ( -1 != (ch = getopt(argc, argv, "x:y:"))) {
         switch (ch){
-        case 'x': x = strtoul( optarg, NULL, 10 ); break;
-        case 'y': y = strtoul( optarg, NULL, 10 ); break;
+        case 'x': x = (u32)strtoul( optarg, NULL, 10 ); break;
+        case 'y': y = (u32)strtoul( optarg, NULL, 10 ); break;
         default:
             usage( );
             exit ( 1 );

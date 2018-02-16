@@ -15,12 +15,13 @@ Copyright (c) Kuninori Morimoto <morimoto.kuninori@renesas.com>
 #include <sys/fcntl.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <unistd.h>
 #include <stdlib.h>
 
-#define u32 unsigned long
+#define u32 unsigned int
 #define u16 unsigned short
 #define u8  unsigned char
 
@@ -67,7 +68,7 @@ struct BitMap {
     struct BitMapInfo   *pinfo;
     struct BitMapHeader *phead;
     void (*getcolor)( struct BitMap *pBit , u8 *pRed , u8 *pGreen , u8 *pBlue );
-    u32 map;
+    uintptr_t map;
     u32 seek;
 };
 

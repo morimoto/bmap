@@ -178,7 +178,7 @@ struct BitMap* OpenBitMap( const char *pFile )
     //----------------------
     // get mmap
     //----------------------
-    pret->map = (u32)mmap( NULL, pret->size,
+    pret->map = (uintptr_t)mmap( NULL, pret->size,
                            PROT_READ, MAP_SHARED,
                            pret->id, 0 );
 
