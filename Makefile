@@ -7,9 +7,14 @@ LDFLAGS	= -static
 CC	= $(CROSS)gcc
 STRIP	= $(CROSS)strip
 
+.c.o:
+	@echo "CC $@"
+	@$(CC) $(CFLAGS) $(LDFLAGS) -c $<
+
 bmap: $(OBJS)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS)
-	$(STRIP) $@
+	@$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJS)
+	@$(STRIP) $@
+	@echo $@
 
 clean:
-	rm -f $(OBJS) bmap
+	@rm -f $(OBJS) bmap
