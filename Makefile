@@ -18,3 +18,6 @@ bmap: $(OBJS)
 
 clean:
 	@rm -f $(OBJS) bmap
+
+mrproper: clean
+	@rm -f .config
