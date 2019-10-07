@@ -1,7 +1,7 @@
 /************************************************************************
 
 
-                             bitmap.c
+			bitmap.c
 
 Copyright (c) Kuninori Morimoto <morimoto.kuninori@renesas.com>
 
@@ -12,46 +12,46 @@ Copyright (c) Kuninori Morimoto <morimoto.kuninori@renesas.com>
 //======================================================================
 //
 //
-//                      static function
+//		static function
 //
 //
 //======================================================================
-static u32 get_bitmapsize( const char *pFile )
+static u32 get_bitmapsize(const char *pFile)
 {
-    FILE *fp;
-    struct BitMapInfo info;
-    struct BitMapHeader head;
-    u32 ret = 0;
-    u8 *type;
+	FILE *fp;
+	struct BitMapInfo info;
+	struct BitMapHeader head;
+	u32 ret = 0;
+	u8 *type;
 
-    fp = fopen( pFile, "rb" );
-    if ( !fp )
-        return ret;
+	fp = fopen(pFile, "rb");
+	if (!fp)
+		return ret;
 
-    if ( 1 != fread( &info, sizeof(info), 1, fp))
-        goto size_err;
+	if (fread(&info, sizeof(info), 1, fp) != 1)
+		goto size_err;
 
-    if ( 1 != fread( &head, sizeof(head), 1, fp))
-        goto size_err;
+	if (fread(&head, sizeof(head), 1, fp) != 1)
+		goto size_err;
 
-    type = (u8*)&info.type;
-    if ( type[1] != 'M' || type[0] != 'B' )
-        goto size_err;
+	type = (u8 *)&info.type;
+	if (type[1] != 'M' || type[0] != 'B')
+		goto size_err;
 
-    switch ( head.bit_count ) {
-    case 16:
-    case 24:
-    case 32:
-        break;
-    default:
-        goto size_err;
-    }
+	switch (head.bit_count) {
+	case 16:
+	case 24:
+	case 32:
+		break;
+	default:
+		goto size_err;
+	}
 
-    ret = info.size;
+	ret = info.size;
 
 size_err:
-    fclose( fp );
-    return ret;
+	fclose(fp);
+	return ret;
 }
 
 //=====================================
@@ -59,150 +59,149 @@ size_err:
 //          getcolor
 //
 //=====================================
-static void getcolor16( struct BitMap *pBit ,
-                        u8 *pRed , u8 *pGreen , u8 *pBlue )
+static void getcolor16(struct BitMap *pBit,
+		       u8 *pRed, u8 *pGreen, u8 *pBlue)
 {
-    u16 rgb = *((u16*)(pBit->map + pBit->seek));
+	u16 rgb = *((u16 *)(pBit->map + pBit->seek));
 
-    pBit->seek += 2;
+	pBit->seek += 2;
 
-    *pRed   = (u8)((rgb & 0xF800) >> 8);
-    *pGreen = (u8)((rgb & 0x07E0) >> 3);
-    *pBlue  = (u8)((rgb & 0x001F) << 3);
+	*pRed   = (u8)((rgb & 0xF800) >> 8);
+	*pGreen = (u8)((rgb & 0x07E0) >> 3);
+	*pBlue  = (u8)((rgb & 0x001F) << 3);
 }
 
-static void getcolor24( struct BitMap *pBit ,
-                        u8 *pRed , u8 *pGreen , u8 *pBlue )
+static void getcolor24(struct BitMap *pBit,
+		       u8 *pRed, u8 *pGreen, u8 *pBlue)
 {
-    u8 *rgb = (u8*)(pBit->map + pBit->seek);
+	u8 *rgb = (u8 *)(pBit->map + pBit->seek);
 
-    pBit->seek += 3;
+	pBit->seek += 3;
 
-    *pRed   = rgb[2];
-    *pGreen = rgb[1];
-    *pBlue  = rgb[0];
+	*pRed   = rgb[2];
+	*pGreen = rgb[1];
+	*pBlue  = rgb[0];
 }
 
-static void getcolor32( struct BitMap *pBit ,
-                        u8 *pRed , u8 *pGreen , u8 *pBlue )
+static void getcolor32(struct BitMap *pBit,
+		       u8 *pRed, u8 *pGreen, u8 *pBlue)
 {
-    u8 *rgb = (u8*)(pBit->map + pBit->seek);
+	u8 *rgb = (u8 *)(pBit->map + pBit->seek);
 
-    pBit->seek += 4;
+	pBit->seek += 4;
 
-    *pRed   = rgb[3];
-    *pGreen = rgb[2];
-    *pBlue  = rgb[1];
+	*pRed   = rgb[3];
+	*pGreen = rgb[2];
+	*pBlue  = rgb[1];
 }
 
 //======================================================================
 //
 //
-//                      global function
+//		global function
 //
 //
 //======================================================================
-bool BitMapSeek( u32 nY , struct BitMap *pBit )
+bool BitMapSeek(u32 nY, struct BitMap *pBit)
 {
-    u32 pitch;
-    u32 line;
+	u32 pitch;
+	u32 line;
 
-    if ( !pBit )
-        return false;
+	if (!pBit)
+		return false;
 
-    pitch  = pBit->pinfo->size - pBit->pinfo->offset;
-    pitch /= pBit->phead->height;
+	pitch  = pBit->pinfo->size - pBit->pinfo->offset;
+	pitch /= pBit->phead->height;
 
-    if (pBit->phead->height > 0)
-        line = pBit->phead->height - nY - 1;
-    else
-        line = nY;
+	if (pBit->phead->height > 0)
+		line = pBit->phead->height - nY - 1;
+	else
+		line = nY;
 
-    pBit->seek = pBit->pinfo->offset + (line * pitch);
-    return true;
+	pBit->seek = pBit->pinfo->offset + (line * pitch);
+	return true;
 }
 
 //=====================================
 //
-//          CloseBitMap
+//	CloseBitMap
 //
 //=====================================
-void CloseBitMap( struct BitMap *pBit )
+void CloseBitMap(struct BitMap *pBit)
 {
-    if ( !pBit )
-        return;
+	if (!pBit)
+		return;
 
-    if ( pBit->map )
-        munmap( (void*)pBit->map, pBit->size );
+	if (pBit->map)
+		munmap((void *)pBit->map, pBit->size);
 
-    if ( pBit->id > 0 )
-        close( pBit->id );
+	if (pBit->id > 0)
+		close(pBit->id);
 
-    free ( pBit );
-
+	free(pBit);
 }
 
 //=====================================
 //
-//          OpenBitMap
+//	OpenBitMap
 //
 //=====================================
-struct BitMap* OpenBitMap( const char *pFile )
+struct BitMap *OpenBitMap(const char *pFile)
 {
-    struct BitMap *pret;
+	struct BitMap *pret;
 
-    pret = (struct BitMap *)malloc( sizeof(struct BitMap) );
-    if ( !pret ) {
-        printf( "Error malloc\n" );
-        return NULL;
-    }
+	pret = (struct BitMap *)malloc(sizeof(struct BitMap));
+	if (!pret) {
+		printf("Error malloc\n");
+		return NULL;
+	}
 
-    //----------------------
-    // get bitmap file size
-    //----------------------
-    pret->size = get_bitmapsize( pFile );
-    if ( 0 == pret->size ) {
-        printf( "Error can not get bitmap info\n" );
-        goto open_err;
-    }
+	//----------------------
+	// get bitmap file size
+	//----------------------
+	pret->size = get_bitmapsize(pFile);
+	if (!pret->size) {
+		printf("Error can not get bitmap info\n");
+		goto open_err;
+	}
 
-    //----------------------
-    // frame buffer open
-    //----------------------
-    pret->id = open( pFile, O_RDONLY );
-    if( pret->id < 0 ) {
-        printf( "Error opening bitmap\n" );
-        goto open_err;
-    }
+	//----------------------
+	// frame buffer open
+	//----------------------
+	pret->id = open(pFile, O_RDONLY);
+	if (pret->id < 0) {
+		printf("Error opening bitmap\n");
+		goto open_err;
+	}
 
-    //----------------------
-    // get mmap
-    //----------------------
-    pret->map = (uintptr_t)mmap( NULL, pret->size,
-                           PROT_READ, MAP_SHARED,
-                           pret->id, 0 );
+	//----------------------
+	// get mmap
+	//----------------------
+	pret->map = (uintptr_t)mmap(NULL, pret->size,
+				    PROT_READ, MAP_SHARED,
+				    pret->id, 0);
 
-    if ( MAP_FAILED == (void*)pret->map ) {
-        pret->map = 0;
-        printf( "Error bitmap mmap\n" );
-        goto open_err;
-    }
+	if ((void *)pret->map == MAP_FAILED) {
+		pret->map = 0;
+		printf("Error bitmap mmap\n");
+		goto open_err;
+	}
 
-    pret->pinfo = (struct BitMapInfo *)pret->map;
-    pret->phead = (struct BitMapHeader *)(pret->map + sizeof(struct BitMapInfo));
+	pret->pinfo = (struct BitMapInfo *)pret->map;
+	pret->phead = (struct BitMapHeader *)(pret->map + sizeof(struct BitMapInfo));
 
-    switch ( pret->phead->bit_count ) {
-    case 16 : pret->getcolor = getcolor16; break;
-    case 24 : pret->getcolor = getcolor24; break;
-    case 32 : pret->getcolor = getcolor32; break;
-    default:
-        printf( "Error un supported bitmap\n" );
-        goto open_err;
-    }
+	switch (pret->phead->bit_count) {
+	case 16: pret->getcolor = getcolor16; break;
+	case 24: pret->getcolor = getcolor24; break;
+	case 32: pret->getcolor = getcolor32; break;
+	default:
+		printf("Error un supported bitmap\n");
+		goto open_err;
+	}
 
-    return pret;
+	return pret;
 
 open_err:
-    CloseBitMap( pret );
-    return NULL;
+	CloseBitMap(pret);
+	return NULL;
 }
