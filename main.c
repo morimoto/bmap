@@ -1,6 +1,6 @@
 /*************************************************************************
 
-                                   main
+			main
 
 Copyright (c) Kuninori Morimoto <morimoto.kuninori@renesas.com>
 
@@ -11,70 +11,70 @@ Copyright (c) Kuninori Morimoto <morimoto.kuninori@renesas.com>
 
 //=====================================
 //
-//          usage
+//	usage
 //
 //=====================================
-static void usage( void )
+static void usage(void)
 {
-    printf( "bmap version %s\n"
-            "usage: bmap [-x arg][-y arg][device] file\n"
-            "\n"
-            "-x    : start position of x\n"
-            "-y    : start position of y\n"
-            "device: /dev/fbX\n"
-            "file  : bitmap file\n",
-            VERSION );
+	printf("bmap version %s\n"
+	       "usage: bmap [-x arg][-y arg][device] file\n"
+	       "\n"
+	       "-x    : start position of x\n"
+	       "-y    : start position of y\n"
+	       "device: /dev/fbX\n"
+	       "file  : bitmap file\n",
+	       VERSION);
 }
 
 //=====================================
 //
-//          main
+//	main
 //
 //=====================================
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
-    struct BitMap *pbit = NULL;
-    int ch;
-    u32 x = 0;
-    u32 y = 0;
-    const char *dev = "/dev/fb0";
+	struct BitMap *pbit = NULL;
+	int ch;
+	u32 x = 0;
+	u32 y = 0;
+	const char *dev = "/dev/fb0";
 
-    //----------------------
-    // check option
-    //----------------------
-    while ( -1 != (ch = getopt(argc, argv, "x:y:"))) {
-        switch (ch){
-        case 'x': x = (u32)strtoul( optarg, NULL, 10 ); break;
-        case 'y': y = (u32)strtoul( optarg, NULL, 10 ); break;
-        default:
-            usage( );
-            exit ( 1 );
-        }
-    }
+	//----------------------
+	// check option
+	//----------------------
+	while ((ch = getopt(argc, argv, "x:y:")) != -1) {
+		switch (ch) {
+		case 'x': x = (u32)strtoul(optarg, NULL, 10); break;
+		case 'y': y = (u32)strtoul(optarg, NULL, 10); break;
+		default:
+			usage();
+			exit(1);
+		}
+	}
 
-    argc -= optind;
-    argv += optind;
+	argc -= optind;
+	argv += optind;
 
-    //----------------------
-    // device name
-    //----------------------
-    if( 2 == argc ) {
-        dev = argv[ 0 ];
-        argv++;
-    }
+	//----------------------
+	// device name
+	//----------------------
+	if (argc == 2) {
+		dev = argv[0];
+		argv++;
+	}
 
-    if ( !OpenFrameBuffer( dev ))
-        goto end;
+	if (!OpenFrameBuffer(dev))
+		goto end;
 
-    pbit = OpenBitMap( argv[ 0 ] );
-    if ( !pbit )
-        goto end;
+	pbit = OpenBitMap(argv[0]);
+	if (!pbit)
+		goto end;
 
-    DrawBitMap( pbit , x , y );
+	DrawBitMap(pbit, x, y);
 
-    CloseBitMap( pbit );
- end:
-    CloseFrameBuffer(  );
+	CloseBitMap(pbit);
+end:
+	CloseFrameBuffer();
 
-    return 0;
+	return 0;
 }
